@@ -1,227 +1,120 @@
-# Pregnancy Risk Prediction System
+# Diabetes Prediction and Health Monitoring System
 
-A Python machine learning project that estimates pregnancy risk from personal, medical, and pregnancy-history information.
+A complete beginner-to-intermediate Python machine learning project that predicts diabetes risk from health-related inputs and provides simple health monitoring suggestions.
 
-The project includes:
-
-- A Streamlit web application
-- A command-line prediction program
-- A model-training and model-selection script
-- A saved Scikit-learn prediction pipeline
-- Automatic BMI calculation
-- Pregnancy-risk percentage and risk-level display
-
-> **Medical disclaimer:** This project is intended only for education, academic demonstration, and portfolio use. It is not a medical diagnosis system and must not replace professional medical advice, examination, or treatment.
+> **Important medical disclaimer:** This project is for education, portfolio, and final-year demonstration purposes only. It is not a medical diagnosis system. Always consult a qualified healthcare professional for medical advice.
 
 ## Project Features
 
-- Accepts personal and medical information from the user
-- Calculates BMI from height and weight
-- Accepts blood sugar in mmol/L
-- Converts blood sugar to mg/dL for display in the web application
-- Predicts a pregnancy-risk percentage
-- Categorizes the predicted risk as:
-  - Low: below 33%
-  - Medium: 33% to below 66%
-  - High: 66% or above
-- Supports both web-based and terminal-based prediction
-- Handles missing feature values using mean imputation
-- Standardizes input features before model prediction
-- Compares Random Forest, Decision Tree, and Logistic Regression models
-- Saves the selected model as `best_model_dataset_1.pkl`
+- Loads and cleans a diabetes prediction dataset
+- Handles missing/invalid zero values in medical columns
+- Trains and compares multiple machine learning models:
+  - Logistic Regression
+  - Random Forest
+  - Support Vector Machine
+  - K-Nearest Neighbors
+- Evaluates models using:
+  - Accuracy
+  - Precision
+  - Recall
+  - F1-score
+  - Confusion matrix
+- Saves the best model as `diabetes_model.pkl`
+- Provides a clean Streamlit web application
+- Predicts diabetes risk from user input
+- Shows risk level: Low, Medium, or High
+- Gives basic health monitoring suggestions based on BMI, glucose, blood pressure, and age
+- Saves useful charts in the `screenshots/` folder
 
 ## Project Structure
 
 ```text
-Pregnancy_Risk_Prediction_System/
+diabetes_prediction_project/
 │
 ├── app.py
-├── user_input.py
-├── model_training_dataset_1.py
-├── dataset_1.csv
-├── best_model_dataset_1.pkl
+├── model_training.py
+├── diabetes_model.pkl
+├── model_metrics.json
+├── dataset/
+│   └── diabetes.csv
 ├── requirements.txt
-└── README.md
+├── README.md
+└── screenshots/
+    ├── model_comparison.png
+    ├── confusion_matrix_best_model.png
+    └── correlation_heatmap.png
 ```
-
-### File Description
-
-| File | Purpose |
-|---|---|
-| `app.py` | Runs the Streamlit web application |
-| `user_input.py` | Runs pregnancy-risk prediction in the terminal |
-| `model_training_dataset_1.py` | Cleans the dataset, compares models, evaluates the best model, and saves it |
-| `dataset_1.csv` | Contains the pregnancy-risk training data |
-| `best_model_dataset_1.pkl` | Contains the saved trained Scikit-learn pipeline |
-| `requirements.txt` | Lists the required Python packages |
-| `README.md` | Explains the project and its usage |
 
 ## Dataset
 
-The project uses `dataset_1.csv`, based on the Maternal Health and High-Risk Pregnancy Dataset.
+The project uses a CSV with the same columns as the Pima Indians Diabetes Dataset:
 
-Dataset source:
+- Pregnancies
+- Glucose
+- BloodPressure
+- SkinThickness
+- Insulin
+- BMI
+- DiabetesPedigreeFunction
+- Age
+- Outcome
 
-[Maternal Health and High-Risk Pregnancy Dataset on Kaggle](https://www.kaggle.com/datasets/vmohammedraiyyan/maternal-health-and-high-risk-pregnancy-dataset)
+This package includes a demo CSV so the project runs immediately. For final submission or research-quality use, replace `dataset/diabetes.csv` with the real Pima Indians Diabetes Dataset or run:
 
-The included dataset contains:
-
-- 1,205 rows
-- 11 input features
-- 1 target column named `Risk Level`
-
-The target values are:
-
-- `Low`
-- `High`
-
-Rows with a missing `Risk Level` are removed before training.
-
-### Input Features
-
-| Feature | Description |
-|---|---|
-| `Age` | Age of the pregnant person |
-| `Systolic BP` | Systolic blood pressure |
-| `Diastolic` | Diastolic blood pressure |
-| `BS` | Blood sugar level in mmol/L |
-| `Body Temp` | Body temperature in Fahrenheit |
-| `BMI` | Body mass index |
-| `Previous Complications` | Previous pregnancy complications: 0 or 1 |
-| `Preexisting Diabetes` | Pre-existing diabetes: 0 or 1 |
-| `Gestational Diabetes` | Gestational diabetes: 0 or 1 |
-| `Mental Health` | Stress, anxiety, or depression history: 0 or 1 |
-| `Heart Rate` | Heart rate in beats per minute |
-
-## Machine Learning Workflow
-
-### 1. Data Loading
-
-The training script loads the dataset using Pandas:
-
-```python
-df = pd.read_csv("dataset_1.csv")
+```bash
+python model_training.py --download
 ```
 
-### 2. Target Preparation
-
-The `Risk Level` column is converted into binary values:
-
-```text
-Low  = 0
-High = 1
-```
-
-### 3. Data Splitting
-
-The data is divided into:
-
-- Training data
-- Validation data
-- Testing data
-
-The split uses `random_state=42` and stratification to preserve the class distribution.
-
-### 4. Preprocessing Pipeline
-
-Each model is trained inside a Scikit-learn pipeline containing:
-
-1. `SimpleImputer(strategy="mean")`
-2. `StandardScaler()`
-3. A classification model
-
-This keeps data preprocessing and model prediction together.
-
-### 5. Models Compared
-
-The training script tests several configurations of:
-
-- Random Forest Classifier
-- Decision Tree Classifier
-- Logistic Regression
-
-### 6. Model Selection
-
-The models are compared using a weighted score:
-
-```text
-Overall Score =
-    Accuracy × 0.20
-  + Precision × 0.20
-  + Recall × 0.35
-  + F1-score × 0.25
-```
-
-Recall receives the highest weight because missing a high-risk pregnancy may be more serious than producing a false warning in an educational screening project.
-
-The included saved pipeline currently uses:
-
-```text
-RandomForestClassifier(
-    n_estimators=50,
-    max_depth=5,
-    random_state=42
-)
-```
+That command attempts to download a public diabetes CSV and then trains the model.
 
 ## Installation
 
-### 1. Clone the Repository
-
-```bash
-git clone YOUR_REPOSITORY_URL
-cd Pregnancy_Risk_Prediction_System
-```
-
-Replace `YOUR_REPOSITORY_URL` with the link to your GitHub repository.
-
-### 2. Create a Virtual Environment
+### 1. Create a virtual environment
 
 ```bash
 python -m venv venv
 ```
 
-### 3. Activate the Virtual Environment
+### 2. Activate the virtual environment
 
-#### Windows
+Windows:
 
 ```bash
 venv\Scripts\activate
 ```
 
-#### macOS or Linux
+macOS/Linux:
 
 ```bash
 source venv/bin/activate
 ```
 
-### 4. Install the Required Packages
+### 3. Install dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-## Train the Model
+## How to Train the Model
 
 Run:
 
 ```bash
-python model_training_dataset_1.py
+python model_training.py
 ```
 
-The script will:
+This will:
 
-1. Load `dataset_1.csv`
-2. Remove rows with missing target values
-3. Divide the data into training, validation, and testing sets
-4. Apply missing-value imputation and feature scaling
-5. Train multiple classification models
-6. Compare accuracy, precision, recall, and F1-score
-7. Select the model with the highest weighted validation score
-8. Test the selected model
-9. Save it as `best_model_dataset_1.pkl`
+1. Load `dataset/diabetes.csv`
+2. Clean the dataset
+3. Replace impossible zero values with missing values
+4. Split the data into training and testing sets
+5. Train four machine learning models
+6. Compare their performance
+7. Save the best model as `diabetes_model.pkl`
+8. Save charts in the `screenshots/` folder
 
-## Run the Streamlit Web Application
+## How to Run the Streamlit App
 
 Run:
 
@@ -229,168 +122,129 @@ Run:
 streamlit run app.py
 ```
 
-Streamlit will display a local address, usually:
+Then open the local URL shown in the terminal, usually:
 
 ```text
 http://localhost:8501
 ```
 
-Open that address in a web browser.
+## How the Project Works
 
-Enter the requested information and click **Predict Risk**.
+### 1. Data Loading
 
-The application will display:
+`model_training.py` reads the diabetes CSV file from the `dataset/` folder. If the file is missing, it attempts to download a public CSV. If downloading fails, it creates a demo dataset with the same column structure.
 
-- Calculated BMI
-- Converted glucose value in mg/dL
-- Predicted pregnancy-risk percentage
-- Low, medium, or high predicted risk
+### 2. Data Cleaning
 
-## Run the Command-Line Program
+Some medical columns should not realistically have zero values. For example, glucose, blood pressure, insulin, skin thickness, and BMI cannot usually be zero in real measurements. The script replaces those zero values with missing values and uses median imputation during model training.
+
+### 3. Model Training
+
+The script trains four models:
+
+- Logistic Regression
+- Random Forest
+- Support Vector Machine
+- K-Nearest Neighbors
+
+Each model is trained using a Scikit-learn pipeline. Pipelines are useful because they keep preprocessing and model prediction together.
+
+### 4. Model Evaluation
+
+The models are compared using accuracy, precision, recall, and F1-score. The best model is selected mainly by F1-score, then by accuracy.
+
+### 5. Model Saving
+
+The best model and useful metadata are saved in `diabetes_model.pkl` using Joblib. The Streamlit app loads this file to make predictions.
+
+### 6. Web App Prediction
+
+The user enters health details in the sidebar. The app sends those values to the trained model and displays:
+
+- Prediction result
+- Estimated probability
+- Risk level
+- General health suggestions
+- Basic health indicator chart
+
+## How to Test Predictions
+
+After running the app, try these sample inputs:
+
+### Lower-risk example
+
+```text
+Pregnancies: 1
+Glucose: 95
+BloodPressure: 70
+SkinThickness: 20
+Insulin: 80
+BMI: 23.5
+DiabetesPedigreeFunction: 0.30
+Age: 25
+```
+
+### Higher-risk example
+
+```text
+Pregnancies: 6
+Glucose: 180
+BloodPressure: 90
+SkinThickness: 35
+Insulin: 170
+BMI: 38.0
+DiabetesPedigreeFunction: 0.90
+Age: 55
+```
+
+## GitHub Portfolio Tips
+
+To make this project look more professional on GitHub:
+
+1. Add screenshots of the Streamlit app to the `screenshots/` folder.
+2. Add a short project demo video or GIF.
+3. Mention model metrics in the README.
+4. Add a clear medical disclaimer.
+5. Keep code comments simple and helpful.
+6. Add a `requirements.txt` file so others can run it easily.
+
+## Common Problems and Fixes
+
+### Problem: `diabetes_model.pkl` not found
 
 Run:
 
 ```bash
-python user_input.py
+python model_training.py
 ```
 
-Enter each requested value in the terminal.
+### Problem: Streamlit command not found
 
-For yes-or-no questions, type:
-
-```text
-yes
-```
-
-or:
-
-```text
-no
-```
-
-The terminal program will display:
-
-- Calculated BMI
-- Predicted pregnancy-risk percentage
-
-## Example Input
-
-```text
-Age: 30
-Height: 5 feet 4 inches
-Weight: 65 kg
-Systolic blood pressure: 120
-Diastolic blood pressure: 80
-Blood sugar: 6.5 mmol/L
-Body temperature: 98.6 °F
-Heart rate: 82
-Previous complications: No
-Pre-existing diabetes: No
-Gestational diabetes: No
-Mental-health condition: No
-```
-
-The result depends on the patterns learned by the trained model.
-
-## Technologies Used
-
-- Python
-- Pandas
-- Scikit-learn
-- Streamlit
-- Joblib
-
-## Requirements
-
-The project requires the following Python packages:
-
-```text
-streamlit
-pandas
-scikit-learn
-joblib
-```
-
-## Common Problems
-
-### `best_model_dataset_1.pkl` Not Found
-
-Train the model first:
-
-```bash
-python model_training_dataset_1.py
-```
-
-Make sure the model file is in the same folder as `app.py` and `user_input.py`.
-
-### `streamlit` Is Not Recognized
-
-Install the project requirements:
+Install dependencies again:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-You can also run Streamlit through Python:
+### Problem: Dataset columns are missing
 
-```bash
-python -m streamlit run app.py
-```
-
-### Dataset File Not Found
-
-Make sure `dataset_1.csv` is in the main project folder.
-
-### Incorrect Dataset Columns
-
-The dataset must contain these columns:
+Make sure your CSV contains exactly these columns:
 
 ```text
-Age
-Systolic BP
-Diastolic
-BS
-Body Temp
-BMI
-Previous Complications
-Preexisting Diabetes
-Gestational Diabetes
-Mental Health
-Heart Rate
-Risk Level
+Pregnancies,Glucose,BloodPressure,SkinThickness,Insulin,BMI,DiabetesPedigreeFunction,Age,Outcome
 ```
-
-### Model Input Error
-
-Do not change the feature names or their order without retraining the model.
-
-## Limitations
-
-- The project predicts statistical risk, not a clinical diagnosis.
-- Its performance depends on the quality and representativeness of the dataset.
-- The application does not use laboratory confirmation, medical imaging, physical examination, or a complete clinical history.
-- The displayed percentage is the classifier's estimated probability, not a medically validated risk score.
-- The current model predicts only two dataset classes: low risk and high risk.
-- The low, medium, and high interface labels are based on probability thresholds, not separate training classes.
-- Real clinical use would require external validation, fairness testing, calibration analysis, privacy protection, regulatory review, and supervision by medical professionals.
 
 ## Future Improvements
 
+- Add login and user history
+- Store predictions in a database
+- Add more advanced charts
+- Add hyperparameter tuning
 - Add cross-validation
-- Add model calibration analysis
-- Add confusion-matrix and model-comparison charts
-- Add feature-importance or SHAP explanations
-- Add input validation and clearer unit descriptions
-- Save prediction history securely
-- Add authentication
-- Deploy the application online
-- Test the model on an independent dataset
-- Evaluate bias across age and health-history groups
-- Add medically reviewed guidance and emergency-warning instructions
+- Deploy the app on Streamlit Community Cloud
+- Add SHAP or feature importance explanations
 
-## Contributors
 
-- Ragib Shahriar Majid — 2311007
-- Umme Habiba — 2311009
-- Arafat Howlader — 2311026
 
+
+make me a github readme ..
