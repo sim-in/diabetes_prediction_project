@@ -394,14 +394,3 @@ Do not change the feature names or their order without retraining the model.
 - Umme Habiba — 2311009
 - Arafat Howlader — 2311026
 
-## License
-
-This project is provided for educational and academic use.
-
-Before public or commercial reuse, review the original dataset license and add an appropriate repository license.
-
-## Disclaimer
-
-This software is not approved as a medical device.
-
-Do not use its output to diagnose, prevent, or treat any medical condition. A high-risk or low-risk prediction may be incorrect. Consult a qualified healthcare professional for medical decisions.
